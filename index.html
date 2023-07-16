@@ -2,8 +2,6 @@
 <html>
 <head>
     <title>HydroHealth - Tu guía de nutrición e hidratación</title>
-    <button onclick="activarNotificaciones()">Activar Notificaciones</button>
-
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -64,6 +62,15 @@
     <script>
         var cantidadAguaTotal = 0;
 
+        // Verificar si la alerta estaba activada y volver a activarla
+        document.addEventListener("DOMContentLoaded", function () {
+            var alertaActivada = localStorage.getItem("alertaActivada");
+
+            if (alertaActivada === "true") {
+                activarNotificaciones();
+            }
+        });
+
         document.getElementById("datosForm").addEventListener("submit", function (event) {
             event.preventDefault();
 
@@ -90,7 +97,6 @@
             var factorAgua = 0.03; // 30 ml por cada kg de peso
             return peso * factorAgua;
         }
-
 
         function activarNotificaciones() {
             if (!("Notification" in window)) {
@@ -121,18 +127,6 @@
                 };
             }
         }
-
-        // Verificar si la alerta estaba activada y volver a activarla
-        document.addEventListener("DOMContentLoaded", function () {
-            var alertaActivada = localStorage.getItem("alertaActivada");
-
-            if (alertaActivada === "true") {
-                activarNotificaciones();
-            }
-        });
-            }
-        }
     </script>
 </body>
 </html>
-
