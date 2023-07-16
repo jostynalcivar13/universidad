@@ -98,6 +98,9 @@
             } else if (Notification.permission !== "denied") {
                 Notification.requestPermission().then(function (permission) {
                     if (permission === "granted") {
+                        // Guardar el estado de la alerta en localStorage
+                        localStorage.setItem("alertaActivada", true);
+
                         setInterval(mostrarNotificacion, 10000); // Intervalo de 10 segundos (10,000 milisegundos)
                     }
                 });
@@ -107,15 +110,26 @@
         function mostrarNotificacion() {
             if (Notification.permission === "granted") {
                 var options = {
-                    body: "¡Esta es una notificación programada!",
+                    body: "¡Esta es una notificación guardada!",
                     icon: "icono-notificacion.png"
                 };
 
-                var notification = new Notification("Notificación Programada", options);
+                var notification = new Notification("Notificación Guardada", options);
 
                 notification.onclick = function () {
                     window.open("https://www.ejemplo.com");
                 };
+            }
+        }
+
+        // Verificar si la alerta estaba activada y volver a activarla
+        document.addEventListener("DOMContentLoaded", function () {
+            var alertaActivada = localStorage.getItem("alertaActivada");
+
+            if (alertaActivada === "true") {
+                activarNotificaciones();
+            }
+        });
             }
         }
     </script>
