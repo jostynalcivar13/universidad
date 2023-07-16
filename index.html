@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ejemplo de Notificación Programada</title>
+</head>
+<body>
+    <h1>Ejemplo de Notificación Programada</h1>
+
+    <button onclick="activarNotificaciones()">Activar Notificaciones</button>
+
+    <script>
+        function activarNotificaciones() {
+            if (!("Notification" in window)) {
+                alert("Tu navegador no es compatible con las notificaciones.");
+            } else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then(function (permission) {
+                    if (permission === "granted") {
+                        setInterval(mostrarNotificacion, 10000); // Intervalo de 10 segundos (10,000 milisegundos)
+                    }
+                });
+            }
+        }
+
+        function mostrarNotificacion() {
+            if (Notification.permission === "granted") {
+                var options = {
+                    body: "¡Esta es una notificación programada!",
+                    icon: "icono-notificacion.png"
+                };
+
+                var notification = new Notification("Notificación Programada", options);
+
+                notification.onclick = function () {
+                    window.open("https://www.ejemplo.com");
+                };
+            }
+        }
+    </script>
+</body>
+</html>
