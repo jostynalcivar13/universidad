@@ -1,23 +1,103 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Ejemplo de Notificación Guardada</title>
-</head>
-<body>
-    <h1>Ejemplo de Notificación Guardada</h1>
-
+    <title>HydroHealth - Tu guía de nutrición e hidratación</title>
     <button onclick="activarNotificaciones()">Activar Notificaciones</button>
 
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            text-align: center;
+            margin: 20px auto;
+        }
+
+        label {
+            display: block;
+        }
+
+        input {
+            width: 200px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+        }
+
+        #recomendaciones {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>HydroHealth - Tu guía de nutrición e hidratación</h1>
+
+    <form id="datosForm">
+        <label for="altura">Altura:</label>
+        <input type="number" id="altura" name="altura" step="0.01" required>
+        <br>
+        <label for="peso">Peso:</label>
+        <input type="number" id="peso" name="peso" step="0.01" required>
+        <br>
+        <label for="edad">Edad:</label>
+        <input type="number" id="edad" name="edad" required>
+        <br>
+        <label for="aguaTomada">Cantidad de agua tomada (ml):</label>
+        <input type="number" id="aguaTomada" name="aguaTomada" required>
+        <br>
+        <button type="submit">Obtener recomendaciones</button>
+    </form>
+
+    <div id="recomendaciones"></div>
+    <div id="cantidadAguaTomada">
+        <p>Cantidad de agua tomada hoy: <span id="totalAguaTomada">0</span> ml</p>
+    </div>
+
     <script>
+        var cantidadAguaTotal = 0;
+
+        document.getElementById("datosForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            var altura = parseFloat(document.getElementById("altura").value);
+            var peso = parseFloat(document.getElementById("peso").value);
+            var edad = parseInt(document.getElementById("edad").value);
+            var aguaTomada = parseFloat(document.getElementById("aguaTomada").value);
+
+            var cantidadAgua = calcularCantidadAgua(peso);
+
+            cantidadAguaTotal += aguaTomada;
+
+            document.getElementById("totalAguaTomada").textContent = cantidadAguaTotal.toFixed(2);
+
+            var recomendacionesDiv = document.getElementById("recomendaciones");
+            recomendacionesDiv.innerHTML = "<h2>Recomendaciones de HydroHealth:</h2>" +
+                "<p>Tu altura: " + altura.toFixed(2) + " metros</p>" +
+                "<p>Tu peso: " + peso.toFixed(2) + " kilogramos</p>" +
+                "<p>Tu edad: " + edad + " años</p>" +
+                "<p>Cantidad adecuada de agua diaria: " + cantidadAgua.toFixed(2) + " litros</p>";
+        });
+
+        function calcularCantidadAgua(peso) {
+            var factorAgua = 0.03; // 30 ml por cada kg de peso
+            return peso * factorAgua;
+        }
+
+
         function activarNotificaciones() {
             if (!("Notification" in window)) {
                 alert("Tu navegador no es compatible con las notificaciones.");
             } else if (Notification.permission !== "denied") {
                 Notification.requestPermission().then(function (permission) {
                     if (permission === "granted") {
-                        // Guardar el estado de la alerta en localStorage
-                        localStorage.setItem("alertaActivada", true);
-
                         setInterval(mostrarNotificacion, 10000); // Intervalo de 10 segundos (10,000 milisegundos)
                     }
                 });
@@ -27,26 +107,17 @@
         function mostrarNotificacion() {
             if (Notification.permission === "granted") {
                 var options = {
-                    body: "¡Esta es una notificación guardada!",
+                    body: "¡Esta es una notificación programada!",
                     icon: "icono-notificacion.png"
                 };
 
-                var notification = new Notification("Notificación Guardada", options);
+                var notification = new Notification("Notificación Programada", options);
 
                 notification.onclick = function () {
                     window.open("https://www.ejemplo.com");
                 };
             }
         }
-
-        // Verificar si la alerta estaba activada y volver a activarla
-        document.addEventListener("DOMContentLoaded", function () {
-            var alertaActivada = localStorage.getItem("alertaActivada");
-
-            if (alertaActivada === "true") {
-                activarNotificaciones();
-            }
-        });
     </script>
 </body>
 </html>
